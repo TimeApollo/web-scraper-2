@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Simple Web Scraper looking for URL's, email, and phone numbers.
+"""Simple Web Scraper looking for URL's, email, phone numbers, and Rel URLs.
 
 Program accepts a website page and scrapes the page looking for URL's,
 emails, and phone numbers. prints them to the std.out.
+
+Uses both HTMLParser and Beautiful Soup.
 
 Author: Aaron Jackson
 Github: TimeApollo
