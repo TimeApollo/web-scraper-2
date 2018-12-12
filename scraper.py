@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Simple Web Scraper looking for URL's, email, phone numbers, and Rel URLs.
+"""Web Scraper 2 looking for URL's, email, phone numbers, and Rel URLs.
 
 Program accepts a website page and scrapes the page looking for URL's,
 emails, and phone numbers. prints them to the std.out.
