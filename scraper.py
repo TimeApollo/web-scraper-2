@@ -16,6 +16,7 @@ import argparse
 import requests
 import re
 from HTMLParser import HTMLParser
+from bs4 import BeautifulSoup
 
 
 def print_urls(urls):
@@ -34,6 +35,12 @@ def print_phone_numbers(numbers):
     """Prints list of phone numbers as strings on individual lines."""
     print('\nPhone Numbers')
     print('\n'.join(set(numbers)))
+
+
+def print_relative_urls(rel_urls):
+    """Prints A and IMG tags' href and src urls from beautiful soup parser."""
+    print('\nIMG and A tag URLS')
+    print('\n'.join(set(rel_urls)))
 
 
 def url_regex(content):
@@ -61,6 +68,12 @@ def phone_number_regex(content):
     return numbers
 
 
+def img_a_url_regex(content):
+    """Searches string for . or @."""
+    urls = re.findall(r'\S+[.|@]\S+', content)
+    return urls
+
+
 def find_urls(html_parser):
     """Returns list of urls by using the html parser."""
     data_urls = url_regex(' '.join(html_parser.text))
@@ -79,6 +92,24 @@ def find_phone_numbers(html_parser):
     for num in phone_tuples_list:
         number_list.append(''.join(map(str, num)))
     return number_list
+
+
+def find_relative_urls(bs):
+    """Returns list of Relative URLS from A and IMG tags."""
+    a_tags = []
+    for link in bs.find_all('a'):
+        if link.get('href'):
+            a_tags.append(link.get('href'))
+        if link.get('src'):
+            a_tags.append(link.get('src'))
+    img_tags = []
+    for link in bs.find_all('img'):
+        if link.get('href'):
+            img_tags.append(link.get('href'))
+        if link.get('src'):
+            img_tags.append(link.get('src'))
+    urls = img_a_url_regex(' '.join(a_tags + img_tags))
+    return urls
 
 
 def scraper_html_parser():
@@ -137,6 +168,13 @@ def main():
     html_parser = scraper_html_parser()
     html_parser.feed(str(web_content))
 
+    """ These lines are the new code using Beautiful Soup """
+    # instantiates beautiful soup with web_content
+    bs = BeautifulSoup(web_content)
+    rel_urls = find_relative_urls(bs)
+
+    """ End of new code. """
+
     # finds info from html parser
     urls = find_urls(html_parser)
     emails = find_emails(html_parser)
@@ -146,6 +184,9 @@ def main():
     print_urls(urls)
     print_emails(emails)
     print_phone_numbers(numbers)
+
+    # print for beautiful soup urls
+    print_relative_urls(rel_urls)
 
 
 if __name__ == "__main__":
